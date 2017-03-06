@@ -36,16 +36,14 @@ class Main extends React.Component {
 
   render() {
     const { authenticated, loginFailed, userData } = this.props;   
+    console.log(userData)
     
     let html;
     if (authenticated) {
       html = (      
         <div>
-            <ReactRedirect location='http://www.google.com'>
-              <div>
-                Redirecting...
-              </div>
-            </ReactRedirect>
+            SUCESSO 
+             <Login /> 
         </div>
       )
     } else {

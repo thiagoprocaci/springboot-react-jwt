@@ -7,9 +7,16 @@ export default function reducer(state={
       case "IS_AUTHENTICATED": {
         return {
           ...state,
-          authenticated : action.payload.authenticated,
+          authenticated : true,
+          userData : action.payload,
         }
       }      
+      case "IS_NOT_AUTHENTICATED": {
+        return {
+          ...state,
+          authenticated : false,
+        }
+      }            
       case "LOGIN_SUCCESS": {
         return {
           ...state,

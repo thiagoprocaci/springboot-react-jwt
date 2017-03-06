@@ -10,12 +10,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
-@RunWith(value = MockitoJUnitRunner.class)
+@RunWith(value = org.mockito.junit.MockitoJUnitRunner.class)
 public class UserServiceTest {
 
     public static final String SALT = "salt";
