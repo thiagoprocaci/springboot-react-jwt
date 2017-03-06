@@ -20,6 +20,7 @@ public class AjaxLogoutSuccessHandlerTest {
     HttpServletResponse response;
     Authentication authentication;
     HttpSession httpSession;
+    HeaderHandler headerHandler;
 
     @Before
     public void before() {
@@ -27,8 +28,9 @@ public class AjaxLogoutSuccessHandlerTest {
         request = mock(HttpServletRequest.class);
         response = mock(HttpServletResponse.class);
         authentication = mock(Authentication.class);
+        headerHandler = mock(HeaderHandler.class);
+        ajaxLogoutSuccessHandler.headerHandler = headerHandler;
         when(authentication.getDetails()).thenReturn("Details");
-
         httpSession = mock(HttpSession.class);
         when(request.getSession()).thenReturn(httpSession);
     }
@@ -39,6 +41,7 @@ public class AjaxLogoutSuccessHandlerTest {
         verify(request).getSession();
         verify(httpSession).invalidate();
         verify(response).setStatus(HttpServletResponse.SC_OK);
+        verify(headerHandler).process(request, response);
         verify(response, never()).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
 

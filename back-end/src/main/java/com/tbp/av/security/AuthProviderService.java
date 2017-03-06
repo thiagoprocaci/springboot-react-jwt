@@ -1,6 +1,8 @@
 package com.tbp.av.security;
 
 import com.tbp.av.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 
@@ -17,6 +19,8 @@ import java.util.Arrays;
 @Component
 public class AuthProviderService implements AuthenticationProvider {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthProviderService.class);
+
     @Autowired
     UserService userService;
 
@@ -24,8 +28,9 @@ public class AuthProviderService implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String login = authentication.getName();
         String password = authentication.getCredentials().toString();
-
+        LOGGER.info("Doing login " + login);
         if(userService.isLoginValid(login, password)) {
+            LOGGER.info("Login successful " + login);
             SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("USER");
             return new UsernamePasswordAuthenticationToken(login, password, Arrays.asList(simpleGrantedAuthority));
         }

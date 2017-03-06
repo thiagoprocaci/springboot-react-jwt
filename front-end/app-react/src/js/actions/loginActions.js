@@ -18,15 +18,11 @@ export function scaLogin(username, password) {
   if(username && password) {
     return function(dispatch) {      
       //let url =  'http://localhost:8082/api/authentication?username=' + username +  '&password=' + base64.encode(utf8.encode(password))
-      let url =  'http://localhost:8082/api/authentication?username=' + username +  '&password=' + password
+      let url =  'http://localhost:8082/api/authentication?origin=*&username=' + username +  '&password=' + password 
      
 
-var config = {
-       headers: {
-             'Content-Type': 'application/x-www-form-urlencoded'
-       }
-};
-     axios.post(url, {}, config)
+
+     axios.post(url)
         .then((response) => {
           dispatch({type: "LOGIN_SUCCESS", payload: 'success'})
         })
