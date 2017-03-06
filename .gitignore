@@ -13,3 +13,7 @@ hs_err_pid*
 
 target/
 *~
+*.iml
+*.idea
+node_modules/
+build/
