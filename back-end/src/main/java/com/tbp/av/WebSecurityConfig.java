@@ -49,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .authenticationEntryPoint(authenticationEntryPoint)
                 .and()
                     .formLogin()
-                    .loginProcessingUrl("/api/authentication")
+                    .loginProcessingUrl("/api/authentication").authenticationDetailsSource()
                     .successHandler(ajaxAuthenticationSuccessHandler)
                     .failureHandler(ajaxAuthenticationFailureHandler)
                     .usernameParameter("username")
