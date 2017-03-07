@@ -51,7 +51,7 @@ class Main extends React.Component {
         html = (
           <div>
             <Alert bsStyle="danger">
-                <strong>Login Falhou.</strong>
+                <strong>Something went wrong.</strong>
            </Alert>
            <Login /> 
            </div>

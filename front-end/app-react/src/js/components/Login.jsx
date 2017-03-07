@@ -9,6 +9,7 @@ import { FormControl } from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
 import { ControlLabel } from 'react-bootstrap';
 import { Checkbox } from 'react-bootstrap';
+import { Panel } from 'react-bootstrap';
 
 import {Icon} from 'react-fa';
 
@@ -30,7 +31,7 @@ class Login extends React.Component {
     super(props);    
     this.state = {
       login: "",
-      senha: ""
+      pass: ""
     };
   }
 
@@ -42,65 +43,40 @@ class Login extends React.Component {
 
   changeEmail(event) {		 
     let fleldVal = event.target.value;    
-    this.setState({login: fleldVal, senha : this.state.senha});
+    this.setState({login: fleldVal, pass : this.state.pass});
   }
   
   changePass(event) {
 	let fleldVal = event.target.value;
-	this.setState({senha: fleldVal, login : this.state.login});    
+	this.setState({pass: fleldVal, login : this.state.login});    
   }
 
   doLogin() {  	
-    this.props.dispatch(doLogin(this.state.login, this.state.senha))
+    this.props.dispatch(doLogin(this.state.login, this.state.pass))
   }
 
   render() {  	
 
 	const { loginFailed } = this.props;
 
-	const formBox = {
-	    width: '368px',
+	const formBox = {	    
     	marginTop: '15%',
-    	marginLeft: '40%',
-    	backgroundColor: '#ECF0F1',
-    	boxShadow: '1px 1px 10px #ccc',
-    	borderRadius: '0 0 4px 4px',
-    	position: 'absolute',    	
-    	fontFamily: 'Open-Sans',
+    	marginLeft: '30%', 
+    	width : '30%',
 	};	
-	const header = {
-	    padding: '21px' ,
-    	background: 'linear-gradient(295deg,#0277bd 0,#0277bd 51%,#016fb0 51%,#016fb0 100%)',    	
-    	borderRadius: 0,
-    	fontSize: 25,
-    	color: '#fff',
-    	textAlign: 'center',    	
-	};
-	const space = {
-		margin : 7,
-	}
-	const formGroup = {
-	    marginBottom: '15px',
-    	marginTop: '25px',
-    	marginLeft: '-53px',
-    	marginRight: '15px',
-	}
+	
 	const btn = {
 	    width: '100%',
 	}
 
-
+	const title = "Login Page" ;
     return (
-    <div>    	    	
-	     <div style={formBox}>	     	
-		     <div style={header}>	  		     	     		     
-		     	 <Icon name="lock" style={space} />		     	
-		     	 Área Restrita
-	    	 </div>
-	    	 <div>	    	   
-			      <Form horizontal style={formGroup}>
+    <div>   
+      <Panel header={title} bsStyle="primary" style={formBox}>
+      		<div>	    	   
+			      <Form horizontal>
 				    <FormGroup controlId="formHorizontalEmail">
-				      <Col componentClass={ControlLabel} sm={2}>			        
+				      <Col componentClass={ControlLabel} sm={1}>			        
 				      </Col>
 				      <Col sm={10}>
 				        <FormControl type="email" placeholder="Login" name="login" onChange={this.changeEmail.bind(this)} onKeyPress={this.pressEnter.bind(this)}/>
@@ -108,24 +84,25 @@ class Login extends React.Component {
 				    </FormGroup>
 
 				    <FormGroup controlId="formHorizontalPassword">
-				      <Col componentClass={ControlLabel} sm={2}>
+				      <Col componentClass={ControlLabel} sm={1}>
 				        
 				      </Col>
 				      <Col sm={10}>
-				        <FormControl type="password" placeholder="Senha" name="senha" onChange={this.changePass.bind(this)} onKeyPress={this.pressEnter.bind(this)}/>
+				        <FormControl type="password" placeholder="Senha" name="pass" onChange={this.changePass.bind(this)} onKeyPress={this.pressEnter.bind(this)}/>
 				      </Col>
 				    </FormGroup>				    
 
 				    <FormGroup>
-				      <Col smOffset={2} sm={10}>
+				      <Col smOffset={1} sm={10}>
 				        <Button bsStyle="primary"  onClick={this.doLogin.bind(this)} style={btn} >
-				          AUTENTICAR
+				          Sign In
 				        </Button>
 				      </Col>
 				    </FormGroup>
 				  </Form>
 			  </div>
-		  </div>
+       </Panel> 	    	
+	     
      </div>
     );
   }
