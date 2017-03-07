@@ -38,17 +38,10 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         String authToken = request.getHeader("Authorization");
         if(authToken != null) {
             authToken = new String(authToken.substring(7).getBytes(), "UTF-8");
-
-
             String username = jwtService.getUsername(authToken, request.getRemoteAddr());
-            logger.info("checking authentication für user " + username);
+            logger.info("checking authentication for user " + username);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                // It is not compelling necessary to load the use details from the database. You could also store the information
-                // in the token and read it from it. It's up to you ;)
                 User user = userService.findByUsername(username);
-
-                // For simple validation it is completely sufficient to just check the token integrity. You don't have to call
-                // the database compellingly. Again it's up to you ;)
                 if (jwtService.isValid(authToken, request.getRemoteAddr()) && user != null) {
                     SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("USER");
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, user.getPassword(), Arrays.asList(simpleGrantedAuthority));

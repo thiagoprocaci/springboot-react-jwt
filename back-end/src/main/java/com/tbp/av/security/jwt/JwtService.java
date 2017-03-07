@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtService {
 
+    // TODO melhorar esta classe... fazer teste
+
     public String createToken(String username, String secret) {
         String compactJws = Jwts.builder()
                 .setSubject(username)

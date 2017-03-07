@@ -49,15 +49,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         security.getIgnored().toArray(permited);
 
         http
-                // we don't need CSRF because our token is invulnerable
-                .csrf().disable()
+                .csrf().disable() // TODO verificar a necessidade
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).and()
-                // don't create session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                     .antMatchers("/api/authenticate").permitAll()
-                    .antMatchers("/").permitAll()
                     .antMatchers("/api/user").permitAll()
+                    .antMatchers("/").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
@@ -72,9 +70,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .logoutSuccessHandler(ajaxLogoutSuccessHandler)
                     .invalidateHttpSession(true)
                     .deleteCookies("JSESSIONID");
-        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
-        // disable page caching
+        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.headers().cacheControl();
     }
 

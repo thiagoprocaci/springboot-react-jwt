@@ -23,13 +23,10 @@ public class UserController {
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public HttpEntity<Map> user(HttpServletRequest request) {
-        //String remoteUser = request.getRemoteUser();
-        //if (remoteUser == null) {
-            //return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-        //}
         Map<String,Object> result = new HashMap<String,Object>();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Map<String, Boolean> authorizations = new HashMap();
+        // TODO tem regras aqui que deveriam ir para o service
         for (GrantedAuthority grantedAuthority : auth.getAuthorities()) {
             authorizations.put(grantedAuthority.getAuthority(), Boolean.TRUE);
         }

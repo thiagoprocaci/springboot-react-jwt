@@ -13,7 +13,7 @@ import { Checkbox } from 'react-bootstrap';
 import {Icon} from 'react-fa';
 
 
-import { scaLogin } from "../actions/loginActions";
+import { doLogin } from "../actions/loginActions";
 
 
 @connect((store) => {
@@ -51,7 +51,7 @@ class Login extends React.Component {
   }
 
   doLogin() {  	
-    this.props.dispatch(scaLogin(this.state.login, this.state.senha))
+    this.props.dispatch(doLogin(this.state.login, this.state.senha))
   }
 
   render() {  	

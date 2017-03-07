@@ -25,7 +25,7 @@ public class AjaxAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         logger.debug("Authentication Successful");
         String token = jwtService.createToken(authentication.getName(), request.getRemoteAddr());
-        response.getWriter().print(token);
+        response.getWriter().print("{ \"token\" : \"" + token + "\"}");
         response.setStatus(HttpServletResponse.SC_OK);
         headerHandler.process(request, response);
     }

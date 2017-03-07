@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -27,6 +28,7 @@ public class AuthProviderService implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String login = authentication.getName();
+        // TODO colocar na base 64
         String password = authentication.getCredentials().toString();
         LOGGER.info("Doing login " + login);
         if(userService.isLoginValid(login, password)) {

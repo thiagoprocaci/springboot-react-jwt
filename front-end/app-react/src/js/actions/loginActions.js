@@ -8,7 +8,7 @@ export function isAuthenticated() {
   return function(dispatch) {            
      let url =  'http://localhost:8082/api/user'
      var config = {
-      headers: {'Authorization':  'Bearer ' +"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiJ9.GE2q1gX6T-mcjf0xmIlGru1gzu-PQF1leFK4U3Kphj8ZLpQG3Rn8qyLLO38ilyvP2u03Ft7bEBAJqRS-86WXCg"}
+      headers: {'Authorization':  'Bearer ' + localStorage.getItem( "token" )}
     };
 
      axios.get(url, config)
@@ -22,14 +22,14 @@ export function isAuthenticated() {
     }  
 }
 
-export function scaLogin(username, password) {
+export function doLogin(username, password) {
   if(username && password) {
     return function(dispatch) {            
-     let url =  'http://localhost:8082/api/authentication?origin=*&username=' + username +  '&password=' + password    
+     let url =  'http://localhost:8082/api/authentication?username=' + username +  '&password=' + password    
      axios.post(url)
         .then((response) => {                    
-          dispatch({type: "LOGIN_SUCCESS", payload: response.data})
-          console.log(response)
+          dispatch({type: "LOGIN_SUCCESS", payload: response.data})        
+          localStorage.setItem( "token", response.data.token );          
         })
         .catch((err) => {
           dispatch({type: "LOGIN_FAILED", payload: err})

@@ -9,17 +9,22 @@ import java.io.IOException;
 @Component
 public class HeaderHandler {
 
-    static final String ORIGIN = "Origin";
+    static final String ALLOW_ORIGIN = "Access-Control-Allow-Origin";
+    static final String ALLOW_CREDENTIALS = "Access-Control-Allow-Credentials";
+    static final String ALLOW_HEADERS = "Access-Control-Allow-Headers";
+    static final String OPTIONS = "OPTIONS";
+    static final String OK = "OK";
+    static final String REQUEST_HEADERS = "Access-Control-Request-Headers";
+    static final String STAR = "*"; //* or origin as you prefer
+    static final String TRUE = "true";
 
     public void process(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String origin = request.getHeader(ORIGIN);
-        response.setHeader("Access-Control-Allow-Origin", "*"); //* or origin as u prefer
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
-        if (request.getMethod().equals("OPTIONS")) {
-            response.getWriter().print("OK");
+        response.setHeader(ALLOW_ORIGIN, STAR);
+        response.setHeader(ALLOW_CREDENTIALS, TRUE);
+        response.setHeader(ALLOW_HEADERS,  request.getHeader(REQUEST_HEADERS));
+        if (request.getMethod().equals(OPTIONS)) {
+            response.getWriter().print(OK);
             response.getWriter().flush();
         }
-
     }
 }
