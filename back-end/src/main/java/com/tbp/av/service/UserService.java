@@ -4,6 +4,9 @@ import com.tbp.av.model.User;
 import com.tbp.av.model.factory.UserFactory;
 import com.tbp.av.repository.UserRepository;
 import com.tbp.av.support.StringSupport;
+
+
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -29,10 +32,11 @@ public class UserService {
         userRepository.save(u);
     }
 
-    public boolean isLoginValid(String username, String password)  {
-        if(!StringUtils.hasText(username) || !StringUtils.hasText(password)) {
+    public boolean isLoginValid(String username, String pass)  {
+        if(!StringUtils.hasText(username) || !StringUtils.hasText(pass)) {
             return false;
         }
+        String password = new String(Base64.decodeBase64(pass.getBytes()));
         User u = userRepository.findByUsername(username);
         if(u == null) {
             return false;

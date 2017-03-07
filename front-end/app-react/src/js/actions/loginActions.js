@@ -25,7 +25,7 @@ export function isAuthenticated() {
 export function doLogin(username, password) {
   if(username && password) {
     return function(dispatch) {            
-     let url =  'http://localhost:8082/api/authentication?username=' + username +  '&password=' + password    
+     let url =  'http://localhost:8082/api/authentication?username=' + username +  '&password=' + base64.encode(utf8.encode(password))    
      axios.post(url)
         .then((response) => {                    
           dispatch({type: "LOGIN_SUCCESS", payload: response.data})        

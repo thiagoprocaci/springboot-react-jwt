@@ -5,11 +5,13 @@ import com.tbp.av.model.User;
 import com.tbp.av.model.factory.UserFactory;
 import com.tbp.av.repository.UserRepository;
 import com.tbp.av.support.StringSupport;
+import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
@@ -58,7 +60,7 @@ public class UserServiceTest {
     @Test
     public void testIsLoginValidNullUser() {
         when(userRepository.findByUsername(USERNAME)).thenReturn(null);
-        assertFalse(userService.isLoginValid(USERNAME, PASS));
+        assertFalse(userService.isLoginValid(USERNAME, new String(Base64.encodeBase64(PASS.getBytes()))));
         verifyZeroInteractions(shaPasswordEncoder);
     }
 
@@ -66,14 +68,14 @@ public class UserServiceTest {
     public void testIsLoginValidDiffPass() {
         User u = new User(USERNAME, PASS, SALT);
         when(userRepository.findByUsername(USERNAME)).thenReturn(u);
-        assertFalse(userService.isLoginValid(USERNAME, PASS));
+        assertFalse(userService.isLoginValid(USERNAME, new String(Base64.encodeBase64(PASS.getBytes()))));
     }
 
     @Test
     public void testIsLoginValidSuccess() {
         User u = new User(USERNAME, ENCODED_PASS, SALT);
         when(userRepository.findByUsername(USERNAME)).thenReturn(u);
-        assertTrue(userService.isLoginValid(USERNAME, PASS));
+        assertTrue(userService.isLoginValid(USERNAME, new String(Base64.encodeBase64(PASS.getBytes()))));
     }
 
     @Test
