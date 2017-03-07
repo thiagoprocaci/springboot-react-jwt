@@ -2,53 +2,56 @@ package com.tbp.av.security.filter;
 
 
 import java.io.IOException;
-import java.util.Arrays;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.tbp.av.model.User;
-import com.tbp.av.security.jwt.JwtService;
+import com.tbp.av.security.SecurityAppContext;
+import com.tbp.av.security.factory.UsernamePasswordAuthenticationTokenFactory;
+
 import com.tbp.av.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
+    static final String AUTHORIZATION = "Authorization";
+    static final String UTF_8 = "UTF-8";
+    static final int BEGIN_INDEX = 7;
     private final Log logger = LogFactory.getLog(this.getClass());
 
     @Autowired
-    private UserService userService;
-
+    UserService userService;
     @Autowired
-    private JwtService jwtService;
+    UsernamePasswordAuthenticationTokenFactory usernamePasswordAuthenticationTokenFactory;
+    @Autowired
+    SecurityAppContext securityAppContext;
 
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        String authToken = request.getHeader("Authorization");
+        String authToken = request.getHeader(AUTHORIZATION);
         if(authToken != null) {
-            authToken = new String(authToken.substring(7).getBytes(), "UTF-8");
-            String username = jwtService.getUsername(authToken, request.getRemoteAddr());
-            logger.info("checking authentication for user " + username);
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                User user = userService.findByUsername(username);
-                if (jwtService.isValid(authToken, request.getRemoteAddr()) && user != null) {
-                    SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("USER");
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, user.getPassword(), Arrays.asList(simpleGrantedAuthority));
-                    logger.info("authenticated user " + username + ", setting security context");
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+            authToken = new String(authToken.substring(BEGIN_INDEX).getBytes(), UTF_8);
+            SecurityContext context = securityAppContext.getContext();
+            if(context.getAuthentication() == null) {
+                logger.info("Checking authentication for token " + authToken);
+                User u = userService.validateUser(authToken, request.getRemoteAddr());
+                if(u != null) {
+                    logger.info("User " + u.getUsername() + " found.");
+                    Authentication authentication = usernamePasswordAuthenticationTokenFactory.create(u);
+                    context.setAuthentication(authentication);
                 }
-
             }
         }
         chain.doFilter(request, response);

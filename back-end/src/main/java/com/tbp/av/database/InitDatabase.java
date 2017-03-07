@@ -4,14 +4,16 @@ import com.tbp.av.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component // TODO colocar profile para isto
+import java.util.Arrays;
+
+@Component
 public class InitDatabase {
 
 
     @Autowired
     public InitDatabase(UserService userService) {
-        userService.create("admin", "admin");
-        userService.create("tomcat", "tomcat");
+        userService.create("admin", "admin", "USER");
+        userService.create("tomcat", "tomcat", "USER");
     }
 
 

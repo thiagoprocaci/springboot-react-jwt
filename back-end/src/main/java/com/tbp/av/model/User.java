@@ -3,6 +3,7 @@ package com.tbp.av.model;
 
 import javax.persistence.*;
 
+
 @Entity
 public class User {
 
@@ -15,15 +16,20 @@ public class User {
     String password;
     @Column(nullable = false)
     String salt;
+    @Column(nullable = false)
+    String role;
+    @Column
+    String token;
 
     public User() {
 
     }
 
-    public User(String username, String password, String salt) {
+    public User(String username, String password, String salt, String role) {
         this.username = username;
         this.password = password;
         this.salt = salt;
+        this.role = role;
     }
 
     public Integer getId() {
@@ -40,5 +46,17 @@ public class User {
 
     public String getSalt() {
         return salt;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

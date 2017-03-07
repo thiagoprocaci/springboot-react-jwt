@@ -1,7 +1,9 @@
 package com.tbp.av.security.handler;
 
 
-import com.tbp.av.security.jwt.JwtService;
+
+import com.tbp.av.model.User;
+import com.tbp.av.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -26,7 +28,7 @@ public class AjaxAuthenticationSuccessHandlerTest {
     @Mock
     HeaderHandler headerHandler;
     @Mock
-    JwtService jwtService;
+    UserService userService;
 
     @Test
     public void testOnAuthenticationSuccess() throws IOException, ServletException {
@@ -41,13 +43,16 @@ public class AjaxAuthenticationSuccessHandlerTest {
         when(response.getWriter()).thenReturn(printWriter);
 
         String token = "token";
-        when(jwtService.createToken(authentication.getName(), request.getRemoteAddr())).thenReturn(token);
+        User u = new User("usernma", "pass", "salt", "role");
+        u.setToken("token");
+
+        when(userService.createUserToken(authentication.getName(), request.getRemoteAddr())).thenReturn(u);
 
         ajaxAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, authentication);
         verify(response).setStatus(HttpServletResponse.SC_OK);
         verify(headerHandler).process(request, response);
-        verify(jwtService).createToken(authentication.getName(), request.getRemoteAddr());
-        verify(printWriter).print("{ \"token\" : \"" + token + "\"}");
+        verify(userService).createUserToken(authentication.getName(), request.getRemoteAddr()) ;
+        verify(printWriter).print("{ \"token\" : \"" + u.getToken() + "\"}");
     }
 
 }

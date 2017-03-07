@@ -6,15 +6,18 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Component
 public class JwtService {
 
-    // TODO melhorar esta classe... fazer teste
 
-    public String createToken(String username, String secret) {
+
+    public String createToken(String username, String secret, Date expireAt) {
         String compactJws = Jwts.builder()
                 .setSubject(username)
                 .signWith(SignatureAlgorithm.HS512, secret)
+                .setExpiration(expireAt)
                 .compact();
         return compactJws;
     }
