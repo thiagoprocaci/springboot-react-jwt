@@ -1,6 +1,7 @@
 
 package com.tbp.av.security.handler;
 
+import com.tbp.av.security.jwt.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -17,12 +18,16 @@ public class AjaxAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
 
     @Autowired
     HeaderHandler headerHandler;
+    @Autowired
+    JwtService jwtService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         logger.debug("Authentication Successful");
-        headerHandler.process(request, response);
+        String token = jwtService.createToken(authentication.getName(), request.getRemoteAddr());
+        response.getWriter().print(token);
         response.setStatus(HttpServletResponse.SC_OK);
+        headerHandler.process(request, response);
     }
 
 }

@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +21,7 @@ public class UserController {
     static final String USERNAME = "username";
     static final String AUTHORIZATIONS = "permissions";
 
-    @RequestMapping("/user")
+    @RequestMapping(value = "/user", method = RequestMethod.GET)
     public HttpEntity<Map> user(HttpServletRequest request) {
         //String remoteUser = request.getRemoteUser();
         //if (remoteUser == null) {

@@ -1,6 +1,7 @@
 package com.tbp.av;
 
 import com.tbp.av.security.*;
+import com.tbp.av.security.filter.JwtAuthenticationTokenFilter;
 import com.tbp.av.security.handler.AjaxAuthenticationFailureHandler;
 import com.tbp.av.security.handler.AjaxAuthenticationSuccessHandler;
 import com.tbp.av.security.handler.AjaxLogoutSuccessHandler;
@@ -9,11 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -31,6 +35,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     AuthProviderService authProvider;
     @Autowired
     SecurityProperties security;
+    @Autowired
+    JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -42,11 +48,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         String[] permited = new String[security.getIgnored().size()];
         security.getIgnored().toArray(permited);
 
-        http.httpBasic()
-                .realmName("com.tbp.av")
-                .and()
-                    .exceptionHandling()
-                    .authenticationEntryPoint(authenticationEntryPoint)
+        http
+                // we don't need CSRF because our token is invulnerable
+                .csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).and()
+                // don't create session
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .authorizeRequests()
+                    .antMatchers("/api/authenticate").permitAll()
+                    .antMatchers("/").permitAll()
+                    .antMatchers("/api/user").permitAll()
+                    .anyRequest().authenticated()
                 .and()
                     .formLogin()
                     .loginProcessingUrl("/api/authentication")
@@ -59,20 +71,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .logoutUrl("/api/logout")
                     .logoutSuccessHandler(ajaxLogoutSuccessHandler)
                     .invalidateHttpSession(true)
-                    .deleteCookies("JSESSIONID")
-                .and()
-                    .authorizeRequests()
-                    .antMatchers("/api/authenticate").permitAll()
-                    .antMatchers(permited).permitAll()
-                    .antMatchers("/").permitAll()
-                .antMatchers("/api/user").permitAll()
-                    .anyRequest().authenticated()
-                .and()
-                    .csrf()
-                    .disable()
-                    .headers()
-                    .frameOptions()
-                    .disable();
+                    .deleteCookies("JSESSIONID");
+        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
+        // disable page caching
+        http.headers().cacheControl();
     }
 
     @Bean
