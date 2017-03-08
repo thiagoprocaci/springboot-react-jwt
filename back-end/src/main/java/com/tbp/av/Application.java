@@ -9,6 +9,7 @@ public class Application {
 
     // TODO readme
     // TODO react tests
+    // TODO live DEMO
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
