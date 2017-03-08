@@ -55,6 +55,14 @@ public class JwtAuthenticationTokenFilterTest {
         verify(chain).doFilter(request, response);
     }
 
+    @Test
+    public void doFilterInternalExceptionToken() throws IOException, ServletException {
+        when(request.getHeader(AUTHORIZATION)).thenReturn("123");
+        jwtAuthenticationTokenFilter.doFilterInternal(request, response, chain);
+        verifyZeroInteractions(securityAppContext, userService, usernamePasswordAuthenticationTokenFactory );
+        verify(chain).doFilter(request, response);
+    }
+
 
     @Test
     public void doFilterInternalAuthenticationNotNull() throws ServletException, IOException {

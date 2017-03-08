@@ -42,18 +42,22 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         String authToken = request.getHeader(AUTHORIZATION);
         if(authToken != null) {
-            // handle exceptions ....
-            authToken = new String(authToken.substring(BEGIN_INDEX).getBytes(), UTF_8);
-            SecurityContext context = securityAppContext.getContext();
-            if(context.getAuthentication() == null) {
-                logger.info("Checking authentication for token " + authToken);
-                User u = userService.validateUser(authToken, request.getRemoteAddr());
-                if(u != null) {
-                    logger.info("User " + u.getUsername() + " found.");
-                    Authentication authentication = usernamePasswordAuthenticationTokenFactory.create(u);
-                    context.setAuthentication(authentication);
+            try {
+                authToken = new String(authToken.substring(BEGIN_INDEX).getBytes(), UTF_8);
+                SecurityContext context = securityAppContext.getContext();
+                if(context.getAuthentication() == null) {
+                    logger.info("Checking authentication for token " + authToken);
+                    User u = userService.validateUser(authToken, request.getRemoteAddr());
+                    if(u != null) {
+                        logger.info("User " + u.getUsername() + " found.");
+                        Authentication authentication = usernamePasswordAuthenticationTokenFactory.create(u);
+                        context.setAuthentication(authentication);
+                    }
                 }
+            } catch (StringIndexOutOfBoundsException e) {
+                logger.error(e.getMessage());
             }
+
         }
         chain.doFilter(request, response);
     }
