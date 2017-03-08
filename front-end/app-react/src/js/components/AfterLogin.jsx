@@ -5,7 +5,7 @@ import { connect } from "react-redux"
 import { Alert } from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
 
-import {Icon} from 'react-fa';
+
 
 
 import { doLogout } from "../actions/loginActions";
@@ -13,8 +13,7 @@ import { doLogout } from "../actions/loginActions";
 
 @connect((store) => {
   return {
-    authenticated: store.login.authenticated,
-    loginFailed: store.login.failed,
+    
     userData: store.login.userData,
   };
 })
@@ -26,7 +25,7 @@ class AfterLogin extends React.Component {
   }
 
   render() {  	
-  	const { authenticated, loginFailed, userData } = this.props;  
+  	const { userData } = this.props;  
 	
 	const btn = {
 	    margin: '30px',

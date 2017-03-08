@@ -12,7 +12,6 @@
     "react-addons-transition-group": "^15.4.0",
     "react-bootstrap": "^0.30.2",
     "react-dom": "^15.3.0",
-    "react-fa": "^4.1.2",
     "react-redirect": "^1.0.0",
     "react-redux": "^4.4.5",
     "react-router": "^3.0.0",
@@ -40,20 +39,21 @@
     "enzyme": "^2.6.0",
     "file-loader": "^0.10.0",
     "jsdom": "^9.8.3",
-    "mocha": "^3.1.2",
+    "mocha": "^3.2.0",    
     "react-addons-test-utils": "^15.4.1",
     "react-test-renderer": "^15.3.0",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^2.2.1",
-    "webpack-dev-server": "^2.4.0"
+    "webpack-dev-server": "^2.4.0",    
+    "mock-local-storage" : "^1.0.2"
   },
   "scripts": {
     "dev": "./node_modules/.bin/webpack-dev-server --content-base build --inline --hot",
     "helpme": "./node_modules/.bin/webpack --help",
     "build": "./node_modules/.bin/webpack -d -w --display-error-details",
     "build-nowatch": "./node_modules/.bin/webpack -d --display-error-details",
-    "test": "NODE_ENV=test mocha --compilers js:babel-core/register --require ./src/__tests__/index.js \"./src/**/*-test.js\""
+    "test": "NODE_ENV=test mocha -r mock-local-storage  --compilers js:babel-core/register --require ./src/__tests__/index.js \"./src/**/*-test.js\""
   },
   "author": "",
   "license": "ISC"

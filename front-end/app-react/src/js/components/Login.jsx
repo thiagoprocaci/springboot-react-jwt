@@ -11,7 +11,7 @@ import { ControlLabel } from 'react-bootstrap';
 import { Checkbox } from 'react-bootstrap';
 import { Panel } from 'react-bootstrap';
 
-import {Icon} from 'react-fa';
+
 
 
 import { doLogin } from "../actions/loginActions";
