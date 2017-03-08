@@ -8,6 +8,7 @@ export default function reducer(state={
         return {
           ...state,
           authenticated : true,
+          failed : false,
           userData : action.payload,
         }
       }      
@@ -15,6 +16,7 @@ export default function reducer(state={
         return {
           ...state,
           authenticated : false,
+          userData : null,
         }
       }            
       case "LOGIN_SUCCESS": {
@@ -22,7 +24,7 @@ export default function reducer(state={
           ...state,
           authenticated : true,
           failed : false,
-          userData : action.payload,
+          userData : null,
         }
       }
       case "LOGIN_FAILED": {

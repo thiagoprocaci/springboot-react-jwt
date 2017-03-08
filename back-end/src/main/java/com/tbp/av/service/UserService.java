@@ -68,7 +68,7 @@ public class UserService {
         String username = jwtService.getUsername(token, secret);
         if (username != null ) {
             User user = userRepository.findByUsername(username);
-            if (user != null && jwtService.isValid(token, secret)) {
+            if (user != null && token.equals(user.getToken()) && jwtService.isValid(token, secret)) {
                 return user;
             }
         }

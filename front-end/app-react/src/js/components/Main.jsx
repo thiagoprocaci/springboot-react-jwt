@@ -2,6 +2,7 @@ import React from "react"
 import { connect } from "react-redux"
 
 import Login from './Login.jsx';
+import AfterLogin from './AfterLogin.jsx';
 
 import { Alert } from 'react-bootstrap';
 import ReactRedirect from "react-redirect";
@@ -27,7 +28,9 @@ class Main extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-      
+    if(nextProps.authenticated && nextProps.userData === null) {
+      this.props.dispatch(isAuthenticated())        
+    }      
   }
 
   constructor() {
@@ -40,9 +43,8 @@ class Main extends React.Component {
     let html;
     if (authenticated) {
       html = (      
-        <div>
-            SUCESSO 
-             <Login /> 
+        <div>            
+             <AfterLogin /> 
         </div>
       )
     } else {

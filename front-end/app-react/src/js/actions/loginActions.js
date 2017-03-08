@@ -13,10 +13,9 @@ export function isAuthenticated() {
 
      axios.get(url, config)
         .then((response) => {
-          dispatch({type: "IS_AUTHENTICATED", payload: ''})
+          dispatch({type: "IS_AUTHENTICATED", payload: response.data})
         })
         .catch((err) => {
-          console.log(err)
           dispatch({type: "IS_NOT_AUTHENTICATED", payload: ''})
         })
     }  
@@ -27,9 +26,10 @@ export function doLogin(username, password) {
     return function(dispatch) {            
      let url =  'http://localhost:8082/api/authentication?username=' + username +  '&password=' + base64.encode(utf8.encode(password))    
      axios.post(url)
-        .then((response) => {                    
-          dispatch({type: "LOGIN_SUCCESS", payload: response.data})        
-          localStorage.setItem( "token", response.data.token );          
+        .then((response) => {    
+          localStorage.removeItem( "token" )       
+          localStorage.setItem( "token", response.data.token );                
+          dispatch({type: "LOGIN_SUCCESS", payload: response.data}) 
         })
         .catch((err) => {
           dispatch({type: "LOGIN_FAILED", payload: err})
@@ -41,5 +41,14 @@ export function doLogin(username, password) {
     payload: {
       message : "Empty username or password.",
     }
+  }
+}
+
+
+export function doLogout() {   
+  localStorage.removeItem( "token" )   
+  return {
+    type: "IS_NOT_AUTHENTICATED",
+    payload: ''
   }
 }

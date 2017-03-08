@@ -138,8 +138,19 @@ public class UserServiceTest {
     }
 
     @Test
+    public void testValidateUserTokenDiff() {
+        User u = new User(USERNAME, ENCODED_PASS, SALT, ROLE);
+        u.setToken(TOKEN + "2");
+        when(jwtService.getUsername(TOKEN, SECRET)).thenReturn(USERNAME);
+        when(userRepository.findByUsername(USERNAME)).thenReturn(u);
+        when(jwtService.isValid(TOKEN, SECRET)).thenReturn(true);
+        assertNull(userService.validateUser(TOKEN, SECRET));
+    }
+
+    @Test
     public void testValidateUserSuccess() {
         User u = new User(USERNAME, ENCODED_PASS, SALT, ROLE);
+        u.setToken(TOKEN);
         when(jwtService.getUsername(TOKEN, SECRET)).thenReturn(USERNAME);
         when(userRepository.findByUsername(USERNAME)).thenReturn(u);
         when(jwtService.isValid(TOKEN, SECRET)).thenReturn(true);
