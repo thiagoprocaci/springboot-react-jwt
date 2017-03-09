@@ -5,9 +5,6 @@ import { connect } from "react-redux"
 import { Alert } from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
 
-
-
-
 import { doLogout } from "../actions/loginActions";
 
 
@@ -20,7 +17,7 @@ import { doLogout } from "../actions/loginActions";
 
 class AfterLogin extends React.Component {
 
-  doLogout() {  	
+  doLogout() { 
   	this.props.dispatch(doLogout())
   }
 
