@@ -5,7 +5,7 @@ import utf8 from "utf8";
 
 
 export function isAuthenticated() {   
-  return function(dispatch) {            
+  return function(dispatch) {                
      let url =  'http://localhost:8082/api/user'
      var config = {
       headers: {'Authorization':  'Bearer ' + localStorage.getItem( "token" )}
